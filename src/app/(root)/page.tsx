@@ -22,6 +22,7 @@ const HomePage = () => {
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/street.jpg"
+            priority
             alt="Game background"
             layout="fill"
             className="w-full h-full object-cover opacity-50"

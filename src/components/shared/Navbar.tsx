@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import React from "react";
 import { Menu, X } from "lucide-react";
@@ -11,16 +11,37 @@ const navItems = [
   { name: "Créer un personnage", href: "/creation" },
   { name: "Arène", href: "/arenes" },
   { name: "Boutique", href: "/boutique" },
+  { name: "Connexion", href: "/connexion" },
+  { name: "Inscription", href: "/inscription" },
 ];
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      setIsAuthenticated(true);
+      // Récupérer le nom d'utilisateur à partir du token ou d'une requête API
+      // setUsername("NomUtilisateur"); // Remplacez par la logique appropriée
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwtToken");
+    setIsAuthenticated(false);
+    setUsername("");
+    window.location.href = "/"; // Rediriger vers la page d'accueil après la déconnexion
+  };
+
 
   return (
     <nav className="bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex justify-between items-center w-full">
             <Link href="/" className="flex-shrink-0">
               <img
                 className="h-16 w-16"
@@ -30,15 +51,34 @@ const Navbar = () => {
             </Link>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                {navItems
+                  .filter((item) =>
+                    isAuthenticated
+                      ? item.name !== "Connexion" && item.name !== "Inscription"
+                      : item.name !== "Créer un personnage"
+                  )
+                  .map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                {isAuthenticated && (
+                  <>
+                    <span className="text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                      {username}
+                    </span>
+                    <button
+                      onClick={handleLogout}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Déconnexion
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
