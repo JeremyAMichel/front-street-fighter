@@ -72,7 +72,7 @@ export default function CharacterForm({ onSubmit }: CharacterFormProps) {
           type="text"
           value={character.nom}
           onChange={(e) =>
-            setCharacter((prev) => ({ ...prev, name: e.target.value }))
+            setCharacter((prev) => ({ ...prev, nom: e.target.value }))
           }
           required
           className="w-full bg-gray-800 text-white"
