@@ -22,7 +22,7 @@ const Characters = () => {
 
   const fetchCharacters = async () => {
     try {
-      const response = await fetch("https://api.example.com/characters"); // Replace with your Symfony API endpoint
+      const response = await fetch("https://127.0.0.1:8000/api/characters"); // Replace with your Symfony API endpoint
       if (!response.ok) {
         throw new Error("Failed to fetch characters");
       }
